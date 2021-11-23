@@ -1,136 +1,136 @@
-##An·lise de dados_OpenDataSUS_SRAG
-#DomÌnio p˙blico: https://opendatasus.saude.gov.br/dataset/bd-srag-2020
-#SRAG 2020 - Banco de Dados de SÌndrome RespiratÛria Aguda Grave - incluindo dados da COVID-19
-#Vigil‚ncia de SÌndrome RespiratÛria Aguda Grave (SRAG)
+##An√°lise de dados_OpenDataSUS_SRAG
+#Dom√≠nio p√∫blico: https://opendatasus.saude.gov.br/dataset/bd-srag-2020
+#SRAG 2020 - Banco de Dados de S√≠ndrome Respirat√≥ria Aguda Grave - incluindo dados da COVID-19
+#Vigil√¢ncia de S√≠ndrome Respirat√≥ria Aguda Grave (SRAG)
 
-#Este script tem o objetivo de servir orientar uma an·lise objetiva e simples dos casos de SRAG atravÈs do R,
-#dessa forma, pode ser ser acessado por qualquer pessoa e tÈcnico (a) de serviÁos de vigil‚ncia epidemiolÛgica
+#Este script tem o objetivo de servir orientar uma an√°lise objetiva e simples dos casos de SRAG atrav√©s do R,
+#dessa forma, pode ser ser acessado por qualquer pessoa e t√©cnico (a) de servi√ßos de vigil√¢ncia epidemiol√≥gica
 
-#Uma das potencialidades do R È que È possÌvel abrir diversos tipos de arquivos nele. 
-#formato .csv, .txt, .dta, etc., por outro lado, essa diversidade implica diferentes funÁıes de importaÁ„o
+#Uma das potencialidades do R √© que √© poss√≠vel abrir diversos tipos de arquivos nele. 
+#formato .csv, .txt, .dta, etc., por outro lado, essa diversidade implica diferentes fun√ß√µes de importa√ß√£o
 #isso torna o trabalho, as vezes, um pouco mais complicado.
-#O pacote rio ajuda acabar com estes problemas. Com a funÁ„o import(), 
-#ele È capaz de detectar qual arquivo o usu·rio deseja abrir e seleciona a forma mais eficaz de acesso.
+#O pacote rio ajuda acabar com estes problemas. Com a fun√ß√£o import(), 
+#ele √© capaz de detectar qual arquivo o usu√°rio deseja abrir e seleciona a forma mais eficaz de acesso.
 
-#O primeiro passo para us·-lo È instalar o pacote:
+#O primeiro passo para us√°-lo √© instalar o pacote:
 
 #Instalando o pacote 'rio'
 install.packages("rio", dependencies = TRUE)
 
-#Acima, instalamos o pacote com todas as dependÍncias 
-#(outros pacotes que s„o necess·rios para que ele funcione). 
-#Em seguida, carregar qualquer arquivo de dados fica mais f·cil, 
-#basta usar a funÁ„o import():
+#Acima, instalamos o pacote com todas as depend√™ncias 
+#(outros pacotes que s√£o necess√°rios para que ele funcione). 
+#Em seguida, carregar qualquer arquivo de dados fica mais f√°cil, 
+#basta usar a fun√ß√£o import():
 
-#outros pacotes ser„o utilizados ao longo da an·lise, por isso, È recomendado ativ·-los.
-#Carrega o pacote rio e os demais que ser„o usados nas an·lises:
+#outros pacotes ser√£o utilizados ao longo da an√°lise, por isso, √© recomendado ativ√°-los.
+#Carrega o pacote rio e os demais que ser√£o usados nas an√°lises:
 library(rio)
 library(dplyr)
 library(lubridate)
 library(tidyverse)
 library(epiDisplay)
 
-#Nesta an·lise ser· utilizada a base de SRAG com dados atualizados atÈ 08-03-2021 disponÌvel no openDatasus
+#Nesta an√°lise ser√° utilizada a base de SRAG com dados atualizados at√© 08-03-2021 dispon√≠vel no openDatasus
 #-----https://opendatasus.saude.gov.br/dataset/bd-srag-2020
 
 
-#O prÛximo passo È importar o banco de dados.
-#… importnte verificar o nome ao importar, se n„o estiver correto vai acusar erro:
+#O pr√≥ximo passo √© importar o banco de dados.
+#√â importnte verificar o nome ao importar, se n√£o estiver correto vai acusar erro:
 srag <- import(file = "INFLUD-08-03-2021.csv")
 
-#… recomendado preservar a base original e trabalhar com uma cÛpia, 
-#assim, se por algum erro ao realizar uma funÁ„o algma vari·vel por danificada basta recarregar 
-#o banco original j· no R
+#√â recomendado preservar a base original e trabalhar com uma c√≥pia, 
+#assim, se por algum erro ao realizar uma fun√ß√£o algma vari√°vel por danificada basta recarregar 
+#o banco original j√° no R
 srag2 <-srag
 
-#OBJETIVO: QUAIS PASSOS S√O IMPORTANTES PARA GERAR UM BOLETIM EPIDEMIOL”GICO DE COMUNICA«√O COM A SOCIEDADE?
+#OBJETIVO: QUAIS PASSOS S√ÉO IMPORTANTES PARA GERAR UM BOLETIM EPIDEMIOL√ìGICO DE COMUNICA√á√ÉO COM A SOCIEDADE?
 
-#NestE trabalho vamos ver alguns comandos ˙teis e pacotes do R para fazer uma 
-#an·lise exploratÛria descritiva. Um passo inicial importante para uma an·lise descritiva adequada 
-#È verificar os tipos de de vari·veis disponÌveis, como est„o classificadas e quais far„o parte da an·lise:
+#NestE trabalho vamos ver alguns comandos √∫teis e pacotes do R para fazer uma 
+#an√°lise explorat√≥ria descritiva. Um passo inicial importante para uma an√°lise descritiva adequada 
+#√© verificar os tipos de de vari√°veis dispon√≠veis, como est√£o classificadas e quais far√£o parte da an√°lise:
 
 #Qualitativas
 #Nominais
 #Ordinais
 #Quantitativas
 #Discretas
-#ContÌnuas
+#Cont√≠nuas
 
-#sÛ apÛs esse passo os dados poder„o ser resumidos em tabelas, gr·ficos e/ou medidas.
+#s√≥ ap√≥s esse passo os dados poder√£o ser resumidos em tabelas, gr√°ficos e/ou medidas.
 
 #verificando os dados
 str(srag2)
 
-#O base È nacional e possui os dados de todos os municÌpios, por isso faremos um filtro:
-#1∫ pelo municÌpio
-#2∫ pelas vari·veis de interesse
-#MunicÌpio: Matias Barbosa-MG, cÛdigo do IBGE: 3140803
-#PopulaÁ„o estimada [2020]---14.548 pessoas
-#PopulaÁ„o no ˙ltimo censo [2010]---13.435 pessoas
-#Densidade demogr·fica [2010]---85,51 hab/km≤ 
+#O base √© nacional e possui os dados de todos os munic√≠pios, por isso faremos um filtro:
+#1¬∫ pelo munic√≠pio
+#2¬∫ pelas vari√°veis de interesse
+#Munic√≠pio: Matias Barbosa-MG, c√≥digo do IBGE: 3140803
+#Popula√ß√£o estimada [2020]---14.548 pessoas
+#Popula√ß√£o no √∫ltimo censo [2010]---13.435 pessoas
+#Densidade demogr√°fica [2010]---85,51 hab/km¬≤ 
 
-#Fazendo o 1∫ filtro por cÛdigo do municÌpio de residÍncia do paciente 
-#Perceba que È importante dar um segundo nome ao fazer o filtro, neste caso chamamos de srag.mb
+#Fazendo o 1¬∫ filtro por c√≥digo do munic√≠pio de resid√™ncia do paciente 
+#Perceba que √© importante dar um segundo nome ao fazer o filtro, neste caso chamamos de srag.mb
 
 srag.mb <- srag2 %>%
   filter(CO_MUN_RES == 314080)
 
 
-#Dessa forma, o banco a ser analisado possui 80 observaÁıes e 154 vari·veis
-#A partir daqui È possÌvel trabalhar apenas com os casos do municÌpio escolhido 
+#Dessa forma, o banco a ser analisado possui 80 observa√ß√µes e 154 vari√°veis
+#A partir daqui √© poss√≠vel trabalhar apenas com os casos do munic√≠pio escolhido 
 str(srag.mb)
 
-#A partir disso, È possÌvel identificar os municÌpios de notificaÁ„o e os 
-#cÛdigos dos municÌpios de internaÁ„o dos casos de SRAG de pacientes de Matias Barbosa
+#A partir disso, √© poss√≠vel identificar os munic√≠pios de notifica√ß√£o e os 
+#c√≥digos dos munic√≠pios de interna√ß√£o dos casos de SRAG de pacientes de Matias Barbosa
 table(srag.mb$ID_MUNICIP)
 table(srag.mb$CO_MUN_NOT)
 table(srag.mb$ID_MUNICIP)/nrow(srag.mb)*100
 
-#------os pacientes de srag de Matias Barbosa foram internados em 5 municÌpios:
-#--Cataguases, Juiz de Fora, leopoldina, Matias Barbosa, PetrÛpolis e Santos Dumont
+#------os pacientes de srag de Matias Barbosa foram internados em 5 munic√≠pios:
+#--Cataguases, Juiz de Fora, leopoldina, Matias Barbosa, Petr√≥polis e Santos Dumont
 
-#Escolhendo as vari·veis que entrar„o nas an·lises:
+#Escolhendo as vari√°veis que entrar√£o nas an√°lises:
 
-#1-Data do preenchimento da ficha de notificaÁ„o/DT_NOTIFIC
-#2-Data de 1∫s sintomas/DT_SIN_PRI
-#5-Unidade de Sa˙de/CÛdigo (CNES)/ID_UNIDADE OU/CO_UNI_NOT ok
+#1-Data do preenchimento da ficha de notifica√ß√£o/DT_NOTIFIC
+#2-Data de 1¬∫s sintomas/DT_SIN_PRI
+#5-Unidade de Sa√∫de/C√≥digo (CNES)/ID_UNIDADE OU/CO_UNI_NOT ok
 #8-Sexo/CS_SEXO OK
 #10-(ou) Idade/NU_IDADE_N ok
 #11-Gestante/CS_GESTANT OK
-#12-RaÁa/Cor/CS_RACA OK
+#12-Ra√ßa/Cor/CS_RACA OK
 #14-Escolaridade/CS_ESCOL_N OK
-#15- OcupaÁ„o/PAC_COCBO ou PAC_DSCBO OK 
+#15- Ocupa√ß√£o/PAC_COCBO ou PAC_DSCBO OK 
 #20-Bairro/NM_BAIRRO ok
-#27- Paciente tem histÛrico de viagem internacional atÈ 14 dias antes do/HISTO_VGM
-#36-Fatores de risco/ PuÈrpera/PUERPERA
-#36-Fatores de risco/ DoenÁa Cardiovascular CrÙnica/CARDIOPATI
-#36-Fatores de risco/ DoenÁa HematolÛgica CrÙnica/HEMATOLOGI
-#36-Fatores de risco/ SÌndrome de Down/SIND_DOWN
-#36-Fatores de risco/DoenÁa Hep·tica CrÙnica/HEPATICA
+#27- Paciente tem hist√≥rico de viagem internacional at√© 14 dias antes do/HISTO_VGM
+#36-Fatores de risco/ Pu√©rpera/PUERPERA
+#36-Fatores de risco/ Doen√ßa Cardiovascular Cr√¥nica/CARDIOPATI
+#36-Fatores de risco/ Doen√ßa Hematol√≥gica Cr√¥nica/HEMATOLOGI
+#36-Fatores de risco/ S√≠ndrome de Down/SIND_DOWN
+#36-Fatores de risco/Doen√ßa Hep√°tica Cr√¥nica/HEPATICA
 #36-Fatores de risco/Asma/ASMA
 #36-Fatores de risco/ Diabetes mellitus/DIABETES
-#36-Fatores de risco/ DoenÁa NeurolÛgica CrÙnica/NEUROLOGIC
-#36-Fatores de risco/ Outra Pneumatopatia CrÙnica/PNEUMOPATI
-#36-Fatores de risco/ ImunodeficiÍncia/IMUNODEPRE
-#36-Fatores de risco/ DoenÁa Renal CrÙnica/RENAL
+#36-Fatores de risco/ Doen√ßa Neurol√≥gica Cr√¥nica/NEUROLOGIC
+#36-Fatores de risco/ Outra Pneumatopatia Cr√¥nica/PNEUMOPATI
+#36-Fatores de risco/ Imunodefici√™ncia/IMUNODEPRE
+#36-Fatores de risco/ Doen√ßa Renal Cr√¥nica/RENAL
 #36-Fatores de risco/ Obesidade/OBESIDADE
-#36-Fatores de risco/ Obesidade (DescriÁ„o IMC)/OBES_IMC
-#43-Data da internaÁ„o por SRAG/DT_INTERNA
+#36-Fatores de risco/ Obesidade (Descri√ß√£o IMC)/OBES_IMC
+#43-Data da interna√ß√£o por SRAG/DT_INTERNA
 #47-Internado em UTI?/UTI
 #48-Data da entrada na UTI/DT_ENTUTI
-#50-Uso de suporte ventilatÛrio?/SUPORT_VEN
-#74-EvoluÁ„o do caso/EVOLUCAO
-#75-Data da alta ou Ûbito/DT_EVOLUCA
+#50-Uso de suporte ventilat√≥rio?/SUPORT_VEN
+#74-Evolu√ß√£o do caso/EVOLUCAO
+#75-Data da alta ou √≥bito/DT_EVOLUCA
 
 
-#Para trabalhar com as dstas È necess·rio transformar as datas de interger para Date:
+#Para trabalhar com as dstas √© necess√°rio transformar as datas de interger para Date:
 #Datas escolhidas:
 
-#1-Data do preenchimento da ficha de notificaÁ„o/DT_NOTIFIC
-#2-Data de 1∫s sintomas/DT_SIN_PRI
-#43-Data da internaÁ„o por SRAG/DT_INTERNA
+#1-Data do preenchimento da ficha de notifica√ß√£o/DT_NOTIFIC
+#2-Data de 1¬∫s sintomas/DT_SIN_PRI
+#43-Data da interna√ß√£o por SRAG/DT_INTERNA
 #48-Data da entrada na UTI/DT_ENTUTI
-#75-Data da alta ou Ûbito/DT_EVOLUCA
+#75-Data da alta ou √≥bito/DT_EVOLUCA
 
 #Transformando de interger-->Date
 srag.mb <- srag.mb %>%
@@ -143,9 +143,9 @@ srag.mb <- srag.mb %>%
 
 #Conferindo:
 table(srag.mb$DT_EVOLUCA)
-#OBS: # As funÁıes date() e as_date() assumem que a ordem segue o padr„o da 
-#lÌngua inglesa: ano-mÍs-dia (ymd). Por isso, ao transformar troca-se a ordem na vari·vel, 
-#mas n„o se preocupe, no momento das operaÁıes algÈbricas tudo sair· como o esperado
+#OBS: # As fun√ß√µes date() e as_date() assumem que a ordem segue o padr√£o da 
+#l√≠ngua inglesa: ano-m√™s-dia (ymd). Por isso, ao transformar troca-se a ordem na vari√°vel, 
+#mas n√£o se preocupe, no momento das opera√ß√µes alg√©bricas tudo sair√° como o esperado
 
 #Transformando de character-->factor
 srag.mb <- srag.mb %>%
@@ -184,15 +184,15 @@ srag.mb <- srag.mb %>%
   mutate(CLASSI_FIN = as.factor(CLASSI_FIN),
          CLASSI_OUT = as.factor(CLASSI_OUT))
 
-#Renomeando os lebels das vari·veis 
+#Renomeando os lebels das vari√°veis 
 srag.mb <- srag.mb %>%
   mutate(CS_SEXO = recode(CS_SEXO, `F` = "Feminino", `M` = "Masculino",`9` = "Ignorado"),
-         CS_GESTANT = recode(CS_GESTANT, `2` = "2∫ Trimestre", `5` = "N„o", `6` = "N„o se aplica"),
+         CS_GESTANT = recode(CS_GESTANT, `2` = "2¬∫ Trimestre", `5` = "N√£o", `6` = "N√£o se aplica"),
          CS_RACA = recode(CS_RACA, `1` = "Branca", `2` = "Preta", `3` = "Amarela", `4` = "Parda", `9` = "Ignorado"),
-         CS_ESCOL_N = recode(CS_ESCOL_N, `0` = "Sem escolaridade", `1` = "Fundamental 1∫ ciclo",
-                             `2` = "Fundamental 2∫ ciclo", `3` = "MÈdio 1∫ ao 3∫ ano", `9` = "Ignorado"))
+         CS_ESCOL_N = recode(CS_ESCOL_N, `0` = "Sem escolaridade", `1` = "Fundamental 1¬∫ ciclo",
+                             `2` = "Fundamental 2¬∫ ciclo", `3` = "M√©dio 1¬∫ ao 3¬∫ ano", `9` = "Ignorado"))
 
-#Analisando a presenÁa de NA
+#Analisando a presen√ßa de NA
 table(srag.mb$CS_SEXO, useNA = "always")
 head(srag.mb$CS_SEXO,20)
 table(srag.mb$CS_SEXO, srag.mb$CS_SEXO, useNA = "always")
@@ -216,11 +216,11 @@ srag.mb$CS_ESCOL_N <- srag.mb$CS_ESCOL_N %>%
 
 #Renomeando os lebels
 srag.mb <- srag.mb %>%
-  mutate(PUERPERA = recode(PUERPERA,`2` = "N„o", `9` = "Ignorado"),
-         HEMATOLOGI = recode(HEMATOLOGI,`1` = "Sim", `2` = "N„o", `9` = "Ignorado"),
-         SIND_DOWN = recode(SIND_DOWN,`2` = "N„o", `9` = "Ignorado"))
+  mutate(PUERPERA = recode(PUERPERA,`2` = "N√£o", `9` = "Ignorado"),
+         HEMATOLOGI = recode(HEMATOLOGI,`1` = "Sim", `2` = "N√£o", `9` = "Ignorado"),
+         SIND_DOWN = recode(SIND_DOWN,`2` = "N√£o", `9` = "Ignorado"))
 
-#Analisando a presenÁa de NA
+#Analisando a presen√ßa de NA
 table(srag.mb$PUERPERA, useNA = "always")
 head(srag.mb$PUERPERA,20)
 table(srag.mb$PUERPERA, srag.mb$PUERPERA, useNA = "always")
@@ -249,12 +249,12 @@ srag.mb$SIND_DOWN <- srag.mb$SIND_DOWN %>%
 
 #Renomeando os lebels
 srag.mb <- srag.mb %>%
-  mutate(CARDIOPATI = recode(CARDIOPATI,`1` = "Sim", `2` = "N„o"),
-         HEPATICA = recode(HEPATICA,`1` = "Sim", `2` = "N„o", `9` = "Ignorado"),
-         ASMA = recode(ASMA, `1` = "Sim", `2` = "N„o", `9` = "Ignorado"),
-         DIABETES = recode(DIABETES, `1` = "Sim", `2` = "N„o", `9` = "Ignorado"))
+  mutate(CARDIOPATI = recode(CARDIOPATI,`1` = "Sim", `2` = "N√£o"),
+         HEPATICA = recode(HEPATICA,`1` = "Sim", `2` = "N√£o", `9` = "Ignorado"),
+         ASMA = recode(ASMA, `1` = "Sim", `2` = "N√£o", `9` = "Ignorado"),
+         DIABETES = recode(DIABETES, `1` = "Sim", `2` = "N√£o", `9` = "Ignorado"))
 
-#Analisando a presenÁa de NA
+#Analisando a presen√ßa de NA
 table(srag.mb$CARDIOPATI, useNA = "always")
 head(srag.mb$CARDIOPATI,20)
 table(srag.mb$CARDIOPATI, srag.mb$CARDIOPATI, useNA = "always")
@@ -291,10 +291,10 @@ srag.mb$DIABETES <- srag.mb$DIABETES %>%
 
 #Renomeando os lebels
 srag.mb <- srag.mb %>%
-  mutate(NEUROLOGIC = recode(NEUROLOGIC, `1` = "Sim", `2` = "N„o", `9` = "Ignorado"),
-         PNEUMOPATI = recode(PNEUMOPATI, `1` = "Sim", `2` = "N„o", `9` = "Ignorado"),
-         IMUNODEPRE = recode(IMUNODEPRE, `1` = "Sim", `2` = "N„o", `9` = "Ignorado"),
-         RENAL = recode(RENAL, `1` = "Sim", `2` = "N„o", `9` = "Ignorado"))
+  mutate(NEUROLOGIC = recode(NEUROLOGIC, `1` = "Sim", `2` = "N√£o", `9` = "Ignorado"),
+         PNEUMOPATI = recode(PNEUMOPATI, `1` = "Sim", `2` = "N√£o", `9` = "Ignorado"),
+         IMUNODEPRE = recode(IMUNODEPRE, `1` = "Sim", `2` = "N√£o", `9` = "Ignorado"),
+         RENAL = recode(RENAL, `1` = "Sim", `2` = "N√£o", `9` = "Ignorado"))
 
 #ANALISANDO NA
 table(srag.mb$NEUROLOGIC, useNA = "always")
@@ -336,10 +336,10 @@ table(srag.mb$SUPORT_VEN)
 
 #renomeando os lebels
 srag.mb <- srag.mb %>%
-  mutate(OBESIDADE = recode(OBESIDADE, `1` = "Sim", `2` = "N„o", `9` = "Ignorado"),
-         UTI = recode(UTI, `1` = "Sim", `2` = "N„o"),
-         SUPORT_VEN = recode(SUPORT_VEN, `1` = "Sim invasivo", `2` = "Sim n„o invasivo", `3` = "N„o", `9` = "Ignorado"),
-         EVOLUCAO = recode(EVOLUCAO, `1` = "Cura", `2` = "”bito", `9` = "Ignorado"))
+  mutate(OBESIDADE = recode(OBESIDADE, `1` = "Sim", `2` = "N√£o", `9` = "Ignorado"),
+         UTI = recode(UTI, `1` = "Sim", `2` = "N√£o"),
+         SUPORT_VEN = recode(SUPORT_VEN, `1` = "Sim invasivo", `2` = "Sim n√£o invasivo", `3` = "N√£o", `9` = "Ignorado"),
+         EVOLUCAO = recode(EVOLUCAO, `1` = "Cura", `2` = "√ìbito", `9` = "Ignorado"))
 
 table(srag.mb$OBESIDADE, useNA = "always")
 head(srag.mb$OBESIDADE,20)
@@ -374,40 +374,246 @@ library(tidyr)
 srag.mb$EVOLUCAO <- srag.mb$EVOLUCAO %>%
   replace_na("Ignorado")
 
-#ps: lembrando que so vai mudar se a vari·vel tiver como levels a categoria "Ignorado"
+#ps: lembrando que so vai mudar se a vari√°vel tiver como levels a categoria "Ignorado"
 
-#Agora È possÌvel analisar, por exemplo, a idade para criar a vari·vel faixa et·ria
-table(srag.mb$NU_IDADE_N)
-summary(srag.mb$NU_IDADE_N)
 
-#Uma pausa: ser· que a distribuiÁ„o È normal?
-#o pacote nortest e a funÁ„o ad.test permitem analisar esse aspecto 
-library(nortest)
-ad.test(srag.mb$NU_IDADE_N)
-hist(srag.mb$NU_IDADE_N)
+###########---------------------Manipular vari√°vel Idade-------------------------#############
 
-srag.mb <- srag.mb %>%
-  mutate(fx_etaria = cut(NU_IDADE_N, breaks = c(9,29,60, Inf),right = FALSE,
-                         labels = c("9 a 28 anos", "29 a 59 anos", 
-                                    "60 ou mais")))
-table(srag.mb$fx_etaria)
+#vamos criar a vari√°vel idade?
+#Nem sempre os bancos nos fornecem a idade em ponto de ser 'trabalhada'
+#Podemos criar a partir dos c√≥digos que o banco nos fornece ou a partir das datas dispon√≠veis:
+
+################
+# IDADE / DATAS
+###############
+
+#Pensado... se eu tenho um banco baseado em um question√°rio no qual n√£o foi coletada 
+#a idade em anos, #dias, meses... mAs tenho duas datas: NASCIMENTO e PREENCHIMENTO DO QUEST
+#√â poss√≠vel construir a idade com base nas datas de interna√ß√£o/question√°rio e nascimento!
+
+table(banco$DT_NASC[1:5], useNA = "always")
+table(banco$DT_INTERNA[1:5], useNA = "always")
+
+cbind(banco$DT_INTERNA[1:5], banco$DT_NASC[1:5])
+
+#Neste caso podemos subtrair a data de interna√ß√£o da data de nascimento para construir a IDADE APROXIMADA
+
+
+#Trocando o formato para date
+#1¬∫ verifica a classifica√ß√£o da data
+class(banco$DT_NASC)
+class(banco$DT_INTERNA)
+
+#2¬∫verifica a disposi√ß√£o dos elementos da data
+table(banco$DT_NASC)
+
+#Transforma com as.Date
+banco <- banco %>%
+  mutate(DT_NASC = as.Date(DT_NASC, format = "%d/%m/%Y"),
+         DT_INTERNA = as.Date(DT_INTERNA, format = "%d/%m/%Y"))
+
+#ser√° que foi?
+table(banco$DT_NASC)
+class(banco$DT_NASC) #ok!
+
+#Vamos extrair o ano da data de nascimento
+#Para isso vamos utilizar o pacote lubridate que nos permite manipular datas (Aula 3!)
+
+#install.packages("lubridate")
+
+library(lubridate)
+#ano de nascimento
+banco <- banco %>%
+  mutate(ano_nasc = epiyear(DT_NASC))
+
+banco$ano_nasc[1:5]
+summary(banco$ano_nasc)
+
+#ano de interna√ß√£o
+banco <- banco %>%
+  mutate(ano_inter = epiyear(DT_INTERNA))
+
+banco$ano_inter[1:5]
+summary(banco$ano_inter)
+
+#subtra√ß√£o dos dois anos para criar a idade aproximada em anos
+#Porque APROXIMADA? ---> NEM TODOS COMPLETARAM ANIVERSS√ÅRIO AT√â A DATA DA INTERNA√á√ÉO!
+
+banco$idade_aprox <- (banco$ano_inter-banco$ano_nasc)
+
+summary(banco$idade_aprox)
+
+cbind(banco$ano_nasc[1:5], banco$ano_inter[1:5])
+
+
+############################################
+# IDADE / C√ìDIGOS [SIH-SUS, SIVEP-GRIPE...]
+###########################################
+
+#Em bancos como SIH-SUS, SINAN, SIVEP-Gripe... a idade n√£o √© fornecidada em anos completos
+#EX: SIH-SUS, cod-idade: 1=horas, 2=dias, 3= meses, 4=anos, 5=acima 100 anos
+
+####SIVEP-GRIPE:
+
+banco$NU_IDADE_N # idade 
+banco$TP_IDADE # tipo da idade
+
+summary(banco$NU_IDADE_N)
+table(banco$TP_IDADE) 
+#1-Dia
+#2-M√™s
+#3-Ano
+
+#Temos no banco 409 beb√™s que foram internados com SRAG
+
+# quero criar uma variavel idade EM ANOS; Se tiver dias ou meses, receber√° 0;
+# pois nao comletou 1 ano
+
+
+###--->IF ELSE: Conditional Element Selection
+#Argumentos: teste, sim, n√£o
+#A estrutura condicional if/else √© um recurso que indica quais instru√ß√µes o sistema deve 
+#processar de acordo com uma express√£o booleana. Assim, o sistema testa se uma condi√ß√£o √© verdadeira 
+#e ent√£o executa comandos de acordo com esse resultado.
+
+
+#Se o tipo da idade for 3 --> anos, nao precisamos fazer nada com idade
+banco$idade_anos <- ifelse(banco$TP_IDADE == 3, banco$NU_IDADE_N, 0)
+
+#Qual a condi√ß√£o a ser testada?
+#se (TP_IDADE) tipo de idade == 3, 
+#idade_anos recebe NU_IDADE_N (SIM), caso contrario recebe 0 (N√ÉO)
+
+# resumo da variavel idade em anos - usando base do R
+summary(banco$idade_anos) 
+sd(banco$idade_anos) # desvio padrao
+
+summary(banco$idade_aprox)
+
+#Ser√° que a idade em anos tem uma distribui√ß√£o normal?
+windows()
+hist(banco$idade_anos)
+
+
+# resumir a idade segundo sexo
+by(banco$var.numeric, banco$var.categorico, funcao)
+
+by(banco$idade_anos, banco$CS_SEXO, summary)
+
+# resumo da idade segundo UTI
+by(banco$idade_anos, banco$UTI, summary)
+
+
+###########################################################
+# CRIAR VARI√ÅVEL CATEG√ìRICA A PARTIR DE VARI√ÅVEL NUM√âRICA #
+##########################################################
+
+#H√° momentos em que uma vari√°vel, mesmo num√©rica, n√£o tem impacto sempre positivo ou negativo 
+#sobre outra vari√°vel. A idade, por exemplo, √© uma caracter√≠stica quantific√°vel dos indiv√≠duos 
+#que pode exercer influ√™ncia sobre outras caracter√≠sticas de modo complexo. 
+#Para indiv√≠duos relativamente jovens, quanto maior a idade, em m√©dia, maior a
+#escolaridade. Por√©m, em geral as pessoas um pouco mais velhas viveram sua
+#juventude num contetxo em que o acesso √† escola era menos comum e,
+#por isso, a partir de uma certa idade/faixa, quanto maior a idade, em geral,
+#menor ser√° a escolaridade. 
+#Nesses casos, pode ser mais produtivo converter essa vari√°vel num√©rica numa vari√°vel categ√≥rica 
+#ainda na manipula√ß√£o dos dados/banco. 
+#Para isso √© poss√≠vel utilizar o comando cut(), usando como argumento a vari√°vel num√©rica, 
+#um vetor com os valores de corte m√≠nimo, intermedi√°rios e m√°ximo, e, opcionalmente, um vetor
+#com os r√≥tulos (AQUINO, 2014).
+#http://www.uesc.br/editora/livrosdigitais_20140513/r_cientistas.pdf
+
+
+#--->cut: Convert Numeric to Factor
+#cut divide Y em intervalos e codifica os valores de Y acordo com o intervalo que possui. 
+#O intervalo mais √† esquerda corresponde ao n√≠vel um, o pr√≥ximo mais √† esquerda ao n√≠vel dois...
+
+summary(banco$IDADEANOS)
+table(banco$IDADEANOS)
+
+
+#Breaks = n√∫mero de intervalos nos quais Y (vari√°vel/vetor) deve ser "cortado"
+#Right = indica se os intervalos devem ser fechados √† direita (e abertos √† esquerda) ou vice-versa.
+
+#RIGHT = FALSE ---> os intervalos ser√£o fechados √† esquerda e abertos √† direita.
+#right = true ---> os intervalos s√£o abertos √† esquerda e fechados √† direita (x, y]
+
+
+####------Intervalos na Reta Real-----####
+
+#Intervalo aberto em a e aberto em b, ]a,b[ , {x–ÑR/a < x < b}
+#Aberto √† esquerda e aberto √† direita
+
+# <----------0------------0---------->
+#           a             b
+
+
+
+
+#Intervalo fechado em a e fechado em b, [a,b], {x–ÑR/a ‚â§ x ‚â§ b}
+#Fechado √† esquerda e fechado √† direita
+
+
+# <----------*------------*---------->
+#           a             b
+
+
+
+
+
+#Intervalo aberto em a e fechado em b, ]a,b], {x–ÑR/a < x ‚â§ b}
+#Aberto √† esquerda e fechado √† direita ---> right = TRUE 
+
+# <----------0------------*---------->
+#           a             b
+
+
+
+
+#Intervalo fechado em a e aberto em b, [a,b[, {x–ÑR/a ‚â§ x < b}
+#Fechado √† esquerda e aberto √† direita ---> right = FALSE
+
+# <----------*------------0---------->
+#           a             b
+
+
+
+#Faixa et√°ria
+#Fechado √† esquerda e aberto √† direita ---> right = FALSE:
+
+#1¬∫ as faixas
+banco <- banco %>%
+  mutate(fx_etaria1 = cut(IDADEANOS, breaks = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, Inf),
+                          right = FALSE))
+
+table(banco$fx_etaria1)
+
+banco <- banco %>%
+  mutate(fx_etaria1 = cut(IDADEANOS, breaks=c(0,10,20,30,40,50,60,70,80,90,Inf), right = FALSE,
+                          labels=c("0-9 anos","10-19 anos","20-29 anos","30-39 anos",
+                                   "40-49 anos","50-59 anos",
+                                   "60-69 anos","70-79 anos","80-89 anos","90 anos ou+")))
+
+table(banco$fx_etaria1)
+
+
 
 #Trabalhando com as datas:
 
-#Qual o tempo enre 1∫ sintomas e internaÁ„o?
-#Qual o tempo de atraso entre 1∫ sintomas e a notificaÁ„o?
-#Essas s„o algumas perguntas que podem ser investigadas
+#Qual o tempo enre 1¬∫ sintomas e interna√ß√£o?
+#Qual o tempo de atraso entre 1¬∫ sintomas e a notifica√ß√£o?
+#Essas s√£o algumas perguntas que podem ser investigadas
 
-#Datas que ser„o utilizadas:
+#Datas que ser√£o utilizadas:
 
-#1-Data do preenchimento da ficha de notificaÁ„o/DT_NOTIFIC
-#2-Data de 1∫s sintomas/DT_SIN_PRI
-#43-Data da internaÁ„o por SRAG/DT_INTERNA
+#1-Data do preenchimento da ficha de notifica√ß√£o/DT_NOTIFIC
+#2-Data de 1¬∫s sintomas/DT_SIN_PRI
+#43-Data da interna√ß√£o por SRAG/DT_INTERNA
 #48-Data da entrada na UTI/DT_ENTUTI
-#75-Data da alta ou Ûbito/DT_EVOLUCAO
+#75-Data da alta ou √≥bito/DT_EVOLUCAO
 
 
-#Tempo de atraso utilizando os 1∫ sintomas
+#Tempo de atraso utilizando os 1¬∫ sintomas
 srag.mb$atraso <- as.numeric(srag.mb$DT_NOTIFIC-srag.mb$DT_SIN_PRI)
 summary(srag.mb$atraso)
 table(srag.mb$tempo)
@@ -415,14 +621,14 @@ table(srag.mb$tempo)
 table(srag.mb$DT_NOTIFIC, useNA = "always")
 table(srag.mb$DT_NOTIFIC, srag.mb$DT_NOTIFIC, useNA = "always")
 
-#Tempo entre 1∫ sintomas e internaÁ„o na UTI
+#Tempo entre 1¬∫ sintomas e interna√ß√£o na UTI
 srag.mb$tempoateuti <- as.numeric(srag.mb$DT_ENTUTI-srag.mb$DT_SIN_PRI)
 summary(srag.mb$tempoateuti)
 table(srag.mb$tempoateuti)
 
-#”TIMO, O R CALCULOU O TEMPO EXATAMENTE PARA OS 41 QUE FORAM INTERNADOS NA UTI!
+#√ìTIMO, O R CALCULOU O TEMPO EXATAMENTE PARA OS 41 QUE FORAM INTERNADOS NA UTI!
 
-#Tempo entre 1∫ sintomas e internaÁ„o hospitalar
+#Tempo entre 1¬∫ sintomas e interna√ß√£o hospitalar
 srag.mb$tempointernacao <- as.numeric(srag.mb$DT_INTERNA-srag.mb$DT_SIN_PRI)
 summary(srag.mb$tempointernacao)
 table(srag.mb$tempointernacao)
@@ -430,7 +636,7 @@ table(srag.mb$tempointernacao)
 table(srag.mb$DT_INTERNA, useNA = "always")
 table(srag.mb$DT_INTERNA, srag.mb$DT_INTERNA, useNA = "always")
 
-#TEMPO DE PERMAN NCIA A UTI
+#TEMPO DE PERMAN√äNCIA A UTI
 srag.mb$temponauti <- as.numeric(srag.mb$DT_SAIDUTI-srag.mb$DT_ENTUTI)
 summary(srag.mb$temponauti)
 table(srag.mb$temponauti)
@@ -438,25 +644,25 @@ hist(srag.mb$temponauti)
 
 class(srag.mb$DT_ENTUTI)
 
-#vari·veis criadas:
-table(srag.mb$atraso) #----> tempo entre 1∫ sintomas e a notificaÁ„o
-table(srag.mb$tempointernacao) #------> tempo entre 1∫ sintomas e a internaÁ„o
-table(srag.mb$tempoateuti) #-------> tempo entre 1∫ sintomas e a entrada na uti
-table(srag.mb$temponauti) #-------> tempo de permanÍncia na UTI
+#vari√°veis criadas:
+table(srag.mb$atraso) #----> tempo entre 1¬∫ sintomas e a notifica√ß√£o
+table(srag.mb$tempointernacao) #------> tempo entre 1¬∫ sintomas e a interna√ß√£o
+table(srag.mb$tempoateuti) #-------> tempo entre 1¬∫ sintomas e a entrada na uti
+table(srag.mb$temponauti) #-------> tempo de perman√™ncia na UTI
 
-#HOSPITAS de internaÁ„o;
+#HOSPITAS de interna√ß√£o;
 table(srag.mb$ID_UNIDADE)
 
-#CIDADES DE INTERNA«√O; (MunicÌpio onde est· localizada a Unidade Sentinela que realizou a notificaÁ„o)
+#CIDADES DE INTERNA√á√ÉO; (Munic√≠pio onde est√° localizada a Unidade Sentinela que realizou a notifica√ß√£o)
 table(srag.mb$ID_MUNICIP)
 
-#CURIOSIDADE------> SER¡ QUE COSNEGUIMOS IDENTIFICAR ESSES 80 CASOS OU BOA PARTE DELES NO SIHSUS?
-#qual foi o gasto do municÌpio com internaÁıes em 2020?
+#CURIOSIDADE------> SER√Å QUE COSNEGUIMOS IDENTIFICAR ESSES 80 CASOS OU BOA PARTE DELES NO SIHSUS?
+#qual foi o gasto do munic√≠pio com interna√ß√µes em 2020?
 #Para quem tiver interesse vale a pena conferir.
 
-#Vamos analisar a signfic‚ncia das vari·veis selecionadas
+#Vamos analisar a signfic√¢ncia das vari√°veis selecionadas
 #Ao final o comando "write.csv(tab.sem.ignorado, "tab.sem.ignorado.csv")" vai direcionar a tabela
-#para o repositÛrio que est· sendo utilizado
+#para o reposit√≥rio que est√° sendo utilizado
 
 tab.sem.ignorado<-tableStack(c(CS_SEXO, 
                                NU_IDADE_N,
@@ -488,14 +694,14 @@ tab.sem.ignorado<-tableStack(c(CS_SEXO,
 total.colum = TRUE, percent = c ("column"))      
 write.csv(tab.sem.ignorado, "tab.sem.ignorado.csv")
 
-#criando outra vari·vel e subset para retirar as 5 observaÁıes ignorado do banco
+#criando outra vari√°vel e subset para retirar as 5 observa√ß√µes ignorado do banco
 srag.mb.2<-droplevels(subset(srag.mb,EVOLUCAO!="Ignorado"))
 levels(srag.mb.2$EVOLUCAO)
 
 table(srag.mb.2$EVOLUCAO)
 rm(srag.mb.2)
 
-#Figura 1. N˙mero absoluto de casos e Ûbitos, taxas de incidÍncia e mortalidade
+#Figura 1. N√∫mero absoluto de casos e √≥bitos, taxas de incid√™ncia e mortalidade
 #habitantes e letalidade (%) por Covid-19
 library(tableone)
 
@@ -513,8 +719,8 @@ tabela1<-print(tabela,showAllLevels=T)
 
 #_______________________________
 
-#Figura 2. DistribuiÁ„o dos casos de srag, por semana epidemiolÛgica de inÌcio de sintomas
-#para isso vamos criar a semana epidemiolÛgica com base na data dos 1∫ sintomas
+#Figura 2. Distribui√ß√£o dos casos de srag, por semana epidemiol√≥gica de in√≠cio de sintomas
+#para isso vamos criar a semana epidemiol√≥gica com base na data dos 1¬∫ sintomas
 
 srag.mb <- srag.mb %>%
   mutate(SemanaEpid = epiweek(as.Date(DT_SIN_PRI, format = "%d/%m/%y")))
@@ -523,39 +729,39 @@ srag.mb$SemanaEpid <- as.factor(srag.mb$SemanaEpid)
 
 table(srag.mb$SemanaEpid)
 
-#extraindo mÍs e ano 
+#extraindo m√™s e ano 
 srag.mb <- srag.mb %>%
   mutate(MES = month(DT_SIN_PRI))
 
 table(srag.mb$MES)
 srag.mb$MES <- as.factor(srag.mb$MES) # colocando MES como factor
 
-#gr·fico de casos segundo a semana epidemiolÛgica
+#gr√°fico de casos segundo a semana epidemiol√≥gica
 library(ggplot2)
 
 windows()
 ggplot(srag.mb, aes(x= SemanaEpid)) + 
   geom_bar(fill= "indianred4") +
-  labs(x = "Semana EpidemiolÛgica", y = "Casos de Srag", 
-       title = "DistribuiÁ„o dos casos de Srag",
+  labs(x = "Semana Epidemiol√≥gica", y = "Casos de Srag", 
+       title = "Distribui√ß√£o dos casos de Srag",
        subtitle = "Matias Barbosa fevereiro de 2020 a janeiro 2021",
        caption = "Fonte: SINAN/Sivep gripe") + 
   theme_minimal(base_size = 22)
 
-#-----> O PRIMEIRO CASO DE SRAG DO MUNICÕPIO FOI NOTIFICADO EM 23/02/2020
+#-----> O PRIMEIRO CASO DE SRAG DO MUNIC√çPIO FOI NOTIFICADO EM 23/02/2020
 
-#-----> SEGUNDO O CALEND¡RIO EPIDEMIOL”GICO DO SINAN DE 2020 O PRIMEIRO CASO BATE COM A 9∫ SEMANA,
-#TAL COMO EVIDENCIA O PRIMEIRO CASO DA VARI¡VEL CRIADA SEMANA EPIDEMIOL”GICA
-#DA MESMA FORMA OS ⁄LTIMOS 3 CASOS SEGUNDO A VARI¡VEL OCORREU NA SEMANA 53
-#SE 53 = 27/12/2020	AT… 02/01/2021 ---> OS ULTIMOS 3 CASOS OCORREREM EM:
+#-----> SEGUNDO O CALEND√ÅRIO EPIDEMIOL√ìGICO DO SINAN DE 2020 O PRIMEIRO CASO BATE COM A 9¬∫ SEMANA,
+#TAL COMO EVIDENCIA O PRIMEIRO CASO DA VARI√ÅVEL CRIADA SEMANA EPIDEMIOL√ìGICA
+#DA MESMA FORMA OS √öLTIMOS 3 CASOS SEGUNDO A VARI√ÅVEL OCORREU NA SEMANA 53
+#SE 53 = 27/12/2020	AT√â 02/01/2021 ---> OS ULTIMOS 3 CASOS OCORREREM EM:
 #30/12/2020 --- 31/12/2020 --- 01/01/2021
 
-#OBS:o calend·rio epidemiolÛgico de 2020 est· disponÌvel no material final 
+#OBS:o calend√°rio epidemiol√≥gico de 2020 est√° dispon√≠vel no material final 
 
 #___________________________
 
-#Figura 3.Tempo entre sintomas e data de notificaÁ„o do caso, 
-#e entre data do Ûbito e notificaÁ„o do Ûbito por COVID e SRAG.
+#Figura 3.Tempo entre sintomas e data de notifica√ß√£o do caso, 
+#e entre data do √≥bito e notifica√ß√£o do √≥bito por COVID e SRAG.
 
 variaveis2 <- c("tempoateuti", "tempointernacao", "temponauti", "atraso")
 
@@ -576,23 +782,23 @@ ad.test(srag.mb$temponauti)
 summary(srag.mb$atraso)
 ad.test(srag.mb$atraso)
 
-#Figura 4. DistribuiÁ„o dos Ûbitos confirmados por COVID-19 por semana epidemiolÛgica de ocorrÍncia 
-#para isso vamos faezr um subset com os Ûbitos do municÌpio
+#Figura 4. Distribui√ß√£o dos √≥bitos confirmados por COVID-19 por semana epidemiol√≥gica de ocorr√™ncia 
+#para isso vamos faezr um subset com os √≥bitos do munic√≠pio
 
-table(srag.mb.obito$EVOLUCAO) #--->23 Ûbitos
+table(srag.mb.obito$EVOLUCAO) #--->23 √≥bitos
 
 srag.mb.obito <-srag.mb %>%
-  filter(EVOLUCAO == "”bito")
+  filter(EVOLUCAO == "√ìbito")
 
-#gr·fico: 
+#gr√°fico: 
 #COR
 #http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
 
 windows()
 ggplot(srag.mb.obito, aes(x= SemanaEpid)) + 
   geom_bar(fill= "red3") +
-  labs(x = "Semana EpidemiolÛgica", y = "”bito por Srag", 
-       title = "DistribuiÁ„o dos ”bitos de Srag",
+  labs(x = "Semana Epidemiol√≥gica", y = "√ìbito por Srag", 
+       title = "Distribui√ß√£o dos √ìbitos de Srag",
        subtitle = "Matias Barbosa fevereiro de 2020 a janeiro 2021",
        caption = "Fonte: SINAN/Sivep gripe") +
   theme_minimal(base_size = 22)
@@ -600,10 +806,10 @@ ggplot(srag.mb.obito, aes(x= SemanaEpid)) +
 table(srag.mb$DT_SIN_PRI)
 
 #Figura 5. Casos de SRAG internados de Matias
-#gr·fico de evoluÁ„o das nptificaÁıes segundo a semana epidemiolÛgica
+#gr√°fico de evolu√ß√£o das nptifica√ß√µes segundo a semana epidemiol√≥gica
 
 
-#Figura 9. PrevalÍncia (%) de fatores de risco nos casos de Ûbito
+#Figura 9. Preval√™ncia (%) de fatores de risco nos casos de √≥bito
 variaveis3 <- c("CS_SEXO", 
                 "NU_IDADE_N","fx_etaria","CS_GESTANT","CS_RACA","CS_ESCOL_N","PUERPERA",
                 "CARDIOPATI","HEMATOLOGI","SIND_DOWN","HEPATICA","ASMA","DIABETES","NEUROLOGIC",
@@ -612,7 +818,7 @@ variaveis3 <- c("CS_SEXO",
 tabela3<-CreateTableOne(vars = variaveis3, data = srag.mb.obito)
 tabela3
 
-#Gr·fico de coluna evoluÁ„o segundo faixa et·ria
+#Gr√°fico de coluna evolu√ß√£o segundo faixa et√°ria
 library(ggplot2)
 theme_set(theme_bw())
 
@@ -621,13 +827,13 @@ ggplot(srag.mb) +
   aes(x = SemanaEpid, fill = fx_etaria) +
   geom_bar(position = "dodge") +
   scale_fill_hue()+
-  labs(x = "Semana EpidemiolÛgica", y = "N˙mero de casos", title = "Casos de Srag: segundo faixa et·ria", 
+  labs(x = "Semana Epidemiol√≥gica", y = "N√∫mero de casos", title = "Casos de Srag: segundo faixa et√°ria", 
        subtitle = "Matias Barbosa fev de 2020 a jan de 2021 ",
        caption = "Fonte: SINAN, Sivep gripe") +
   theme_bw(base_size = 22) +
   theme(legend.position= "bottom")
 
-###-------> A paleta de cores n„o È bonita, mas È f·cil de visualizar
+###-------> A paleta de cores n√£o √© bonita, mas √© f√°cil de visualizar
 
 #PACOTES USADOS:
 library(ggplot2)
